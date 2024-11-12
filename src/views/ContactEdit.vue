@@ -3,8 +3,8 @@
     <h4>Hiệu chỉnh Liên hệ</h4>
     <ContactForm
       :contact="contact"
-      @submit="updateContact"
-      @delete="deleteContact"
+      @submit:contact="updateContact"
+      @delete:contact="deleteContact"
     />
     <p>{{ message }}</p>
   </div>
@@ -33,12 +33,9 @@ export default {
         this.contact = await ContactService.get(id);
       } catch (error) {
         console.log(error);
-        // Chuyển sang trang NotFound đồng thời giữ cho URL không đổi
         this.$router.push({
           name: "notfound",
-          params: {
-            pathMatch: this.$route.path.split("/").slice(1),
-          },
+          params: { pathMatch: this.$route.path.split("/").slice(1) },
           query: this.$route.query,
           hash: this.$route.hash,
         });
@@ -54,11 +51,11 @@ export default {
         console.log(error);
       }
     },
-    async deleteContact() {
+    async deleteContact(contactId) {
       if (!this.contact) return;
       if (confirm("Bạn muốn xóa Liên hệ này?")) {
         try {
-          await ContactService.delete(this.contact._id);
+          await ContactService.delete(contactId);
           this.$router.push({ name: "contactbook" });
         } catch (error) {
           console.log(error);
